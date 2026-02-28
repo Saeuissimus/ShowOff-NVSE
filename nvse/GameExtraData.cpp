@@ -501,15 +501,15 @@ const char* GetExtraDataValue(BSExtraData* traverse)
 		case	kExtraData_Script                   	: 
 			pXScript = (ExtraScript*)traverse;
 			if (pXScript->script)
-				sprintf_s(buffer, sizeof(buffer), "script:[%#10X] eventList:[%#10X]  flags:{%#10x}", pXScript->script->refID, pXScript->eventList, pXScript->script->flags);
+				sprintf_s(buffer, sizeof(buffer), "script:[%#10X] eventList:[%10p]  flags:{%#10x}", pXScript->script->refID, pXScript->eventList, pXScript->script->flags);
 			else
-				sprintf_s(buffer, sizeof(buffer), "script:[%#10X] eventList:[%#10X]  flags:{%#10x}", pXScript->script, pXScript->eventList, pXScript->script->flags);
+				sprintf_s(buffer, sizeof(buffer), "script:[%10p] eventList:[%10p]  flags:{%#10x}", pXScript->script, pXScript->eventList, pXScript->script->flags);
 			return buffer;
 			break;
 		case	kExtraData_Action                   	: 
 			pXAction = (ExtraAction*)traverse;
 			if (pXAction->actionRef && pXAction->actionRef->GetFullName())
-				sprintf_s(buffer, sizeof(buffer), "{%#2X} [%#10X] (%s)", pXAction->byte0C, pXAction->actionRef->refID, pXAction->actionRef->GetFullName()->name);
+				sprintf_s(buffer, sizeof(buffer), "{%#2X} [%#10X] (%s)", pXAction->byte0C, pXAction->actionRef->refID, pXAction->actionRef->GetFullName()->name.CStr());
 			else
 				sprintf_s(buffer, sizeof(buffer), "{%#2X} [%#10X] ()", pXAction->byte0C, pXAction->actionRef->refID);
 			return buffer; break;
@@ -528,9 +528,9 @@ const char* GetExtraDataValue(BSExtraData* traverse)
 		case	kExtraData_ReferencePointer         	: 
 			refr = ((ExtraReferencePointer*)traverse)->refr;
 			if (refr && refr->GetFullName())
-				sprintf_s(buffer, sizeof(buffer), "[%#10X] (%s) [%#10X]", refr->refID, refr->GetFullName()->name, refr->extraDataList.m_data);
+				sprintf_s(buffer, sizeof(buffer), "[%#10X] (%s) [%10p]", refr->refID, refr->GetFullName()->name.CStr(), refr->extraDataList.m_data);
 			else
-				sprintf_s(buffer, sizeof(buffer), "[%#10X] () [%#10X]", refr->refID, refr->extraDataList.m_data);
+				sprintf_s(buffer, sizeof(buffer), "[%#10X] () [%10p]", refr->refID, refr->extraDataList.m_data);
 			return buffer; break;
 		case	kExtraData_Follower                 	: return ""; break;
 		case	kExtraData_LevCreaModifier          	: return ""; break;
@@ -540,7 +540,7 @@ const char* GetExtraDataValue(BSExtraData* traverse)
 			pXOwner = (ExtraOwnership*)traverse;
 			if (pXOwner->owner)
 				if (pXOwner->owner->GetFullName())
-					sprintf_s(buffer, sizeof(buffer), "[%#10X] (%s)", pXOwner->owner->refID, pXOwner->owner->GetFullName()->name);
+					sprintf_s(buffer, sizeof(buffer), "[%#10X] (%s)", pXOwner->owner->refID, pXOwner->owner->GetFullName()->name.CStr());
 				else
 					sprintf_s(buffer, sizeof(buffer), "[%#10X]", pXOwner->owner->refID);
 			else
@@ -595,7 +595,7 @@ const char* GetExtraDataValue(BSExtraData* traverse)
 		case	kExtraData_StartingWorldOrCell      	: return ""; break;
 		case	kExtraData_Hotkey:
 			pXHotkey = (ExtraHotkey*)traverse;
-			sprintf_s(buffer, sizeof(buffer), "%f", pXHotkey->index);
+			sprintf_s(buffer, sizeof(buffer), "%i", pXHotkey->index);
 			return buffer;
 			break;
 		case	kExtraData_EditorRefMovedData       	: return ""; break;
