@@ -2087,8 +2087,9 @@ std::pair<std::string, std::string_view> GetFullPath(std::string &&relativePath)
 	auto const curPathSize = curPath.size();
 	auto const rel_path_size = relativePath.size();
 	std::string JSON_FullPath = std::move(curPath) + "\\" + std::move(relativePath);
-	std::string_view json_rel_path_view = { &JSON_FullPath[curPathSize + 1], rel_path_size };
-	return std::make_pair(std::move(JSON_FullPath), json_rel_path_view);
+	std::pair<std::string, std::string_view> result{std::move(JSON_FullPath), std::string_view()};
+	result.second = { result.first.data() + curPathSize + 1, rel_path_size };
+	return result;
 }
 
 //Mutates the entry string by inserting a null character where the first delimiter is found.
