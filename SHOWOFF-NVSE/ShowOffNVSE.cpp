@@ -8,6 +8,7 @@
 #include "memory_pool.h"
 #include "containers.h"
 #include "internal/serialization.h"
+#include "internal/SRWLock.h"
 #include "jip_nvse.h"
 #include "StewieMagic.h"
 
@@ -289,10 +290,13 @@ void MessageHandler(NVSEMessagingInterface::Message* msg)
 		}
 
 		// Handle events
-		for (const auto& EventInfo : EventsArray)
 		{
-			EventInfo->AddQueuedEvents();
-			EventInfo->DeleteEvents();
+			SRWSharedLock lock(EventsArrayMutex);
+			for (const auto& EventInfo : EventsArray)
+			{
+				EventInfo->AddQueuedEvents();
+				EventInfo->DeleteEvents();
+			}
 		}
 		EventHandling::HandleGameLoopEvents();
 

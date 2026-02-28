@@ -1,6 +1,6 @@
 ﻿#include "JohnnyEventPredefinitions.h"
 
-std::mutex EventsArrayMutex;
+SRWLOCK EventsArrayMutex = SRWLOCK_INIT;
 std::vector<EventInfo> EventsArray;
 
 #if 0
@@ -11,6 +11,7 @@ void* __fastcall GenericCreateFilter(void** Filters, UInt32 numFilters) {
 
 EventInfo FindHandlerInfoByChar(const char* nameToFind)
 {
+	SRWSharedLock lock(EventsArrayMutex);
 	auto it = EventsArray.begin();
 	while (it != EventsArray.end())
 	{
@@ -23,17 +24,16 @@ EventInfo FindHandlerInfoByChar(const char* nameToFind)
 
 EventInfo __cdecl JGCreateEvent(const char* EventName, UInt8 maxArgs, UInt8 maxFilters, void* (__fastcall* CreatorFunction)(void**, UInt32))
 {
-	std::lock_guard<std::mutex> lock(EventsArrayMutex);
+	SRWUniqueLock lock(EventsArrayMutex);
 	EventInfo eventinfo = new EventInformation(EventName, maxArgs, maxFilters, CreatorFunction);
 	EventsArray.push_back(eventinfo);
 	return eventinfo;
-
 }
 
 
 void __cdecl JGFreeEvent(EventInfo& toRemove)
 {
-	std::lock_guard<std::mutex> lock(EventsArrayMutex);
+	SRWUniqueLock lock(EventsArrayMutex);
 	if (!toRemove) return;
 	auto it = std::find(std::begin(EventsArray), std::end(EventsArray), toRemove);
 	if (it != EventsArray.end())

@@ -1,7 +1,7 @@
 #pragma once
 
 
-#if 0
+#if 1
 class ICriticalSection
 {
 	public:
@@ -23,9 +23,11 @@ class ScopedLock  //Use this to be safe when doing non-thread-safe things.
 
 public:
 	ScopedLock(ICriticalSection* _cs) : cs(_cs) { cs->Enter(); }
+	ScopedLock(ICriticalSection& _cs) : cs(&_cs) { cs->Enter(); }
 	~ScopedLock() { cs->Leave(); }
 };
-#endif
+
+#else
 
 //Taken from xNVSE, probably mostly made by from JIP.
 class ICriticalSection
@@ -72,3 +74,5 @@ public:
 	ScopedLock(ICriticalSection& cs) : m_cs(&cs) { cs.Enter(); }
 	~ScopedLock() { m_cs->Leave(); }
 };
+
+#endif

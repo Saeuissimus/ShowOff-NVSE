@@ -930,6 +930,7 @@ copy "$(SolutionDir)Release\$(TargetName).pdb" "$(FalloutNVPath)\Data\NVSE\Plugi
     <ClInclude Include="functions\SO_fn_Topics.h" />
     <ClInclude Include="GameFixes.h" />
     <ClInclude Include="internal\ExtractArgs_TypeSafe.h" />
+    <ClInclude Include="internal\SRWLock.h" />
     <ClInclude Include="InventoryRef.h" />
     <ClInclude Include="MenuHooks.h" />
     <ClInclude Include="MiscHooks.h" />

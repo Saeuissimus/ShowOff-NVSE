@@ -2,9 +2,9 @@
 #include "EventFilteringInterface.h"
 #include <unordered_set>
 #include <memory>
-#include <mutex>
 #include <shared_mutex>
 
+#include "../internal/SRWLock.h"
 #include "GameObjects.h"
 
 class EventInformation;
@@ -258,7 +258,7 @@ public:
 	int a = sizeof(std::unordered_set<char>);
 };
 typedef EventInformation* EventInfo;
-extern std::mutex EventsArrayMutex;
+extern SRWLOCK EventsArrayMutex;
 extern std::vector<EventInfo> EventsArray;
 
 void* __fastcall GenericCreateFilter(void** Filters, UInt32 numFilters);
