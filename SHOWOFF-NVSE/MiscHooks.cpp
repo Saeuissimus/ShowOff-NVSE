@@ -163,7 +163,7 @@ namespace PickpocketInCombat
 		{
 			call	SetContainerSubtitleStringToPickpocketAPCost
 
-			originalCode :
+			//originalCode :
 			mov		ecx, [ebp - 4]
 				mov		edx, [ecx + 0x5C]
 				jmp		retnAddr
